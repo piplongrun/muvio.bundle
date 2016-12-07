@@ -100,6 +100,10 @@ class Muvio(Agent.Artist):
         score = artist_score
         best_match = artist['urlSafeName']
 
+    if not best_match:
+      Log(' *** Could not find artist match.')
+      return None
+
     try:
       json = JSON.ObjectFromURL(ARTIST_VIDEOS_URL % (best_match), headers={'Authorization': 'Bearer %s' % (Dict['access_token'])})
     except:
@@ -178,6 +182,10 @@ class Muvio(Agent.Album):
 
         score = artist_score
         best_match = artist['urlSafeName']
+
+    if not best_match:
+      Log(' *** Could not find artist match.')
+      return None
 
     try:
       json = JSON.ObjectFromURL(ARTIST_VIDEOS_URL % (best_match), headers={'Authorization': 'Bearer %s' % (Dict['access_token'])})
