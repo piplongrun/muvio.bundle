@@ -44,7 +44,7 @@ def ArtistName(artist):
 def UpdateToken():
 
   try:
-    json = JSON.ObjectFromURL(AUTH_URL, method='POST')
+    json = JSON.ObjectFromURL(AUTH_URL, method='POST', cacheTime=0)
 
     Log(' *** Successfully got an access token.')
     Dict['access_token'] = json['access_token']
