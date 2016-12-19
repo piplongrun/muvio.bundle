@@ -11,7 +11,7 @@ See the support article "[How do I manually install a channel?](https://support.
 
 Where do I download MUVIO?
 --------------------------
-You can download the latest copy of the agent from Github: [download](https://github.com/piplongrun/muvio.bundle/archive/master.zip)
+You can download the latest copy of the agent from Github: [releases](https://github.com/piplongrun/muvio.bundle/releases)
 
 Where do I report issues?
 -------------------------
