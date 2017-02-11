@@ -1,4 +1,4 @@
-RE_JSON = Regex('"streams":{.+?(\[{.+?}\])')
+RE_VIDEOS = Regex('"quality":"(Med|High)".+?"url":"([^"]+)"')
 
 ####################################################################################################
 def MetadataObjectForURL(url):
@@ -27,25 +27,18 @@ def MediaObjectsForURL(url):
 ####################################################################################################
 def PlayVideo(url, resolution='720', **kwargs):
 
-	json_obj = GetJSON(url)
 	video_url_high = None
 	video_url_med = None
-	version_high = 0
-	version_med = 0
 
-	for stream in json_obj:
+	page = HTTP.Request(url.replace('muvio://', 'http://'), cacheTime=CACHE_1HOUR).content
+	videos = RE_VIDEOS.findall(page)
 
-		if not 'quality' in stream:
-			continue
+	for video in videos:
 
-		if stream['quality'] == 'High' and stream['version'] > version_high:
-			video_url_high = stream['url']
-
-		elif stream['quality'] == 'Med' and stream['version'] > version_med:
-			video_url_med = stream['url']
-
-		else:
-			continue
+		if video[0] == 'Med':
+			video_url_med = video[1]
+		elif video[0] == 'High':
+			video_url_high = video[1]
 
 	if resolution == '720' and video_url_high:
 		video_url = video_url_high
@@ -55,14 +48,3 @@ def PlayVideo(url, resolution='720', **kwargs):
 		raise Ex.MediaNotAvailable
 
 	return Redirect('http://%s' % (video_url.split('//')[-1]))
-
-####################################################################################################
-def GetJSON(url):
-
-	page = HTTP.Request(url.replace('muvio://', 'http://')).content
-	json = RE_JSON.search(page)
-
-	if not json:
-		raise Ex.MediaNotAvailable
-
-	return JSON.ObjectFromString(json.group(1))
