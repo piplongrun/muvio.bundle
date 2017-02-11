@@ -57,6 +57,7 @@ class Muvio(Agent.Artist):
     try:
       json_obj = JSON.ObjectFromURL(SERACH_URL % (String.Quote(metadata.id)))
     except:
+      Log('*** Call to search API failed... ***')
       return None
 
     extras = []
@@ -99,6 +100,7 @@ class Muvio(Agent.Album):
     try:
       json_obj = JSON.ObjectFromURL(SERACH_URL % (String.Quote(artist)))
     except:
+      Log('*** Call to search API failed... ***')
       return None
 
     artist = json_obj['artist']
