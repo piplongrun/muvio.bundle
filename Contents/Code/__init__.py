@@ -74,7 +74,7 @@ class Muvio(Agent.Artist):
       extras.append({
         'type': extra_type,
         'extra': TYPE_MAP[extra_type](
-          url = 'muvio://%s' % (video['url']),
+          url = 'muvio://%s' % (video['url'].split('://')[-1]),
           title = video['title'],
           thumb = video['thumb_url']
         )
@@ -127,7 +127,7 @@ class Muvio(Agent.Album):
         if score > 80:
 
           music_video = MusicVideoObject(
-            url = 'muvio://%s' % (video['url']),
+            url = 'muvio://%s' % (video['url'].split('://')[-1]),
             title = video['title'],
             thumb = video['thumb_url']
           )
