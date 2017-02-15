@@ -8,11 +8,16 @@ MUVIO is an "Extras" agent for Plex Media Server that tries to find music video 
 
 How do I install MUVIO?
 -----------------------
-See the support article "[How do I manually install a channel?](https://support.plex.tv/hc/en-us/articles/201187656-How-do-I-manually-install-a-channel-)" over at the Plex support website.
+You can install MUVIO:
+
+ - From within the Unsupported App Store, or:
+ - Manually: See the support article "[How do I manually install a channel?](https://support.plex.tv/hc/en-us/articles/201187656-How-do-I-manually-install-a-channel-)" over at the Plex support website.
+
+Don't forget to activate the agent in Settings > Server > Agents after installing.
 
 Where do I download MUVIO?
 --------------------------
-You can download the latest copy of the agent from Github: [releases](https://github.com/piplongrun/muvio.bundle/releases)
+If you want to install the agent manually or if you are interested in the source code, you can download the latest copy of the agent from Github: [releases](https://github.com/piplongrun/muvio.bundle/releases)
 
 Where do I report issues?
 -------------------------
