@@ -1,6 +1,6 @@
 MUVIO
 =====
-<img src="https://img.shields.io/github/release/piplongrun/muvio.bundle.png?style=flat-square">
+<img src="https://img.shields.io/github/release/piplongrun/muvio.bundle.png?style=flat-square"> <img src="https://img.shields.io/github/downloads/piplongrun/muvio.bundle/total.png?style=flat-square">
 
 What is MUVIO?
 --------------
