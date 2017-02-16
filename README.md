@@ -1,6 +1,6 @@
 MUVIO
 =====
-<img src="https://img.shields.io/github/release/piplongrun/muvio.bundle.png?style=flat-square"> <img src="https://img.shields.io/github/downloads/piplongrun/muvio.bundle/total.png?style=flat-square">
+<img src="https://img.shields.io/github/release/piplongrun/muvio.bundle.png?style=flat-square">
 
 What is MUVIO?
 --------------
@@ -10,10 +10,10 @@ How do I install MUVIO?
 -----------------------
 You can install MUVIO:
 
- - From within the Unsupported App Store, or:
+ - From within the Unsupported AppStore, or:
  - Manually: See the support article "[How do I manually install a channel?](https://support.plex.tv/hc/en-us/articles/201187656-How-do-I-manually-install-a-channel-)" over at the Plex support website.
 
-Don't forget to activate the agent in Settings > Server > Agents after installing.
+Don't forget to activate the agent in *Settings* > *Server* > *Agents* after installing.
 
 Where do I download MUVIO?
 --------------------------
