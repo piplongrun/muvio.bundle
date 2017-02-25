@@ -1,4 +1,4 @@
-RE_VIDEOS = Regex('"quality":"(meduim|high)".+?"url":"([^"]+)"')
+RE_VIDEOS = Regex('"quality":"(medium|high)".+?"url":"([^"]+)"')
 
 ####################################################################################################
 def MetadataObjectForURL(url):
