@@ -1,4 +1,4 @@
-RE_VIDEOS = Regex('"quality":"(Med|High)".+?"url":"([^"]+)"')
+RE_VIDEOS = Regex('"quality":"(meduim|high)".+?"url":"([^"]+)"')
 
 ####################################################################################################
 def MetadataObjectForURL(url):
@@ -35,9 +35,9 @@ def PlayVideo(url, resolution='720', **kwargs):
 
 	for video in videos:
 
-		if video[0] == 'Med':
+		if video[0] == 'medium':
 			video_url_med = video[1]
-		elif video[0] == 'High':
+		elif video[0] == 'high':
 			video_url_high = video[1]
 
 	if resolution == '720' and video_url_high:
