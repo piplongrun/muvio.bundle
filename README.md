@@ -4,7 +4,7 @@ MUVIO
 
 What is MUVIO?
 --------------
-MUVIO is an "Extras" agent for Plex Media Server that tries to find music video clips for your music library. Development has just started and the agent code is in very early beta status. The current version of this agent works with *Last.fm* libraries only (it does not work with *Plex Premium Music* type libraries - not yet at least).
+MUVIO is an "Extras" agent for Plex Media Server that tries to find music video clips for your music library. The current version of this agent works with *Last.fm* and *Plex Premium* libraries.
 
 How do I install MUVIO?
 -----------------------
