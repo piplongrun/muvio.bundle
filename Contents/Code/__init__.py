@@ -1,6 +1,6 @@
 import unicodedata
 
-VERSION = '1.0.2'
+VERSION = '2.0'
 SERACH_URL = 'https://tadata.me/muvio/?artist=%s'
 
 TYPE_ORDER = ['music_video', 'live_music', 'lyric_video']
@@ -43,12 +43,12 @@ class Muvio(Agent.Artist):
   name = 'MUVIO'
   languages = [Locale.Language.NoLanguage]
   primary_provider = False
-  contributes_to = ['com.plexapp.agents.lastfm']
+  contributes_to = ['com.plexapp.agents.lastfm', 'com.plexapp.agents.plexmusic']
 
-  def search(self, results, media, lang):
+  def search(self, results, media, lang, manual=False, tree=None):
 
-    results.Append(MetadataSearchResult(
-      id = ArtistName(media.primary_metadata.title),
+    results.add(SearchResult(
+      id = ArtistName(tree.title),
       score = 100
     ))
 
@@ -58,6 +58,9 @@ class Muvio(Agent.Artist):
       json_obj = JSON.ObjectFromURL(SERACH_URL % (String.Quote(metadata.id)))
     except:
       Log('*** Call to search API failed... ***')
+      return None
+
+    if not 'videos' in json_obj:
       return None
 
     extras = []
@@ -91,22 +94,12 @@ class Muvio(Agent.Album):
   name = 'MUVIO'
   languages = [Locale.Language.NoLanguage]
   primary_provider = False
-  contributes_to = ['com.plexapp.agents.lastfm']
+  contributes_to = ['com.plexapp.agents.lastfm', 'com.plexapp.agents.plexmusic']
 
-  def search(self, results, media, lang):
+  def search(self, results, media, lang, manual=False, tree=None):
 
-    artist = ArtistName(String.Unquote(media.primary_metadata.id.split('/')[0])) # Album object doesn't have artist information(?). Grab it from the metadata id instead.
-
-    try:
-      json_obj = JSON.ObjectFromURL(SERACH_URL % (String.Quote(artist)))
-    except:
-      Log('*** Call to search API failed... ***')
-      return None
-
-    artist = json_obj['artist']
-
-    results.Append(MetadataSearchResult(
-      id = artist,
+    results.add(SearchResult(
+      id = ArtistName(tree.title),
       score = 100
     ))
 
@@ -115,6 +108,9 @@ class Muvio(Agent.Album):
     try:
       json_obj = JSON.ObjectFromURL(SERACH_URL % (String.Quote(metadata.id)))
     except:
+      return None
+
+    if not 'videos' in json_obj:
       return None
 
     for index, track in enumerate(media.children):
