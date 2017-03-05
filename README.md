@@ -13,7 +13,10 @@ You can install MUVIO:
  - From within the Unsupported AppStore, or:
  - Manually: See the support article "[How do I manually install a channel?](https://support.plex.tv/hc/en-us/articles/201187656-How-do-I-manually-install-a-channel-)" over at the Plex support website.
 
-Don't forget to activate the agent in *Settings* > *Server* > *Agents* after installing.
+After installation:
+
+1. Activate the agent in *Settings* > *Server* > *Agents*.
+2. Use the *Refresh All* option on your music library to let MUVIO collect and add video clips.
 
 Where do I download MUVIO?
 --------------------------
