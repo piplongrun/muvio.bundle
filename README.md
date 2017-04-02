@@ -28,6 +28,5 @@ Create an [issue on Github](https://github.com/piplongrun/muvio.bundle/issues) a
  - Plex Media Server version
  - Primary agent and order of any secondary agents
  - Log files, `com.plexapp.agents.muvio.log`
-
--
-<img src="https://raw.githubusercontent.com/piplongrun/muvio.bundle/master/Contents/Resources/icon-default.jpg" width="150">
+ 
+ <img src="https://raw.githubusercontent.com/piplongrun/muvio.bundle/master/Contents/Resources/icon-default.jpg" width="150">
