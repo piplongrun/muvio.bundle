@@ -67,7 +67,7 @@ class Muvio(Agent.Artist):
 
     for video in json_obj['videos']:
 
-      if 'lyric video' in video['title'].lower():
+      if 'lyric video' in video['title'].lower() or 'lyric-video' in video['url'].lower():
         extra_type = 'lyric_video'
       elif RE_LIVE_VIDEO.search(video['title']):
         extra_type = 'live_music'
