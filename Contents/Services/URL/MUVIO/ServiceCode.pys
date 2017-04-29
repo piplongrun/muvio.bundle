@@ -1,3 +1,5 @@
+import ssl, urllib2
+
 RE_VIDEOS = Regex('"quality":"(medium|high)".+?"url":"([^"]+)"')
 
 ####################################################################################################
@@ -30,12 +32,9 @@ def PlayVideo(url, resolution='720', **kwargs):
 	video_url_high = None
 	video_url_med = None
 
-	try:
-		url = url.replace('muvio://', 'https://')
-		page = HTTP.Request(url, cacheTime=CACHE_1HOUR).content
-	except:
-		url = 'https://proxy.tadata.me/watch/%s' % (url.split('/watch/')[-1])
-		page = HTTP.Request(url, cacheTime=CACHE_1HOUR).content
+	req = urllib2.Request(url.replace('muvio://', 'https://'))
+	ctx = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
+	page = urllib2.urlopen(req, context=ctx).read()
 
 	videos = RE_VIDEOS.findall(page)
 
