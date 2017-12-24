@@ -1,7 +1,7 @@
 import unicodedata
 
-VERSION = '2.2'
-SERACH_URL = 'https://tadata.me/muvio/?artist=%s'
+VERSION = '2.3'
+SERACH_URL = 'https://muvio.api.tadata.me/v2/?artist=%s'
 
 TYPE_ORDER = ['music_video', 'live_music', 'lyric_video']
 TYPE_MAP = {
