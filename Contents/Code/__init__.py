@@ -15,7 +15,7 @@ RE_LIVE_VIDEO = Regex('live (on|at|in|from|for)|\(live|unstaged\)|.*(tour|festiv
 ####################################################################################################
 def Start():
 
-  HTTP.CacheTime = CACHE_1WEEK
+  HTTP.CacheTime = CACHE_1HOUR
   HTTP.Headers['User-Agent'] = 'MUVIO/%s (%s %s; Plex Media Server %s)' % (VERSION, Platform.OS, Platform.OSVersion, Platform.ServerVersion)
 
 ####################################################################################################
