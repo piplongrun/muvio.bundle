@@ -21,7 +21,7 @@ def MediaObjectsForURL(url):
 			audio_codec = AudioCodec.AAC,
 			audio_channels = 2,
 			optimized_for_streaming = True
-		) for resolution in ['720', '360']
+		) for resolution in ['720']
 	]
 
 ####################################################################################################
