@@ -1,6 +1,6 @@
 import unicodedata
 
-VERSION = '2.5'
+VERSION = '2.6'
 SERACH_URL = 'https://muvio.api.tadata.me/v2/?artist=%s'
 
 TYPE_ORDER = ['music_video', 'live_music', 'lyric_video']
@@ -15,7 +15,7 @@ RE_LIVE_VIDEO = Regex('live (on|at|in|from|for)|\(live|unstaged\)|.*(tour|festiv
 ####################################################################################################
 def Start():
 
-  HTTP.CacheTime = CACHE_1HOUR
+  HTTP.CacheTime = CACHE_1WEEK
   HTTP.Headers['User-Agent'] = 'MUVIO/%s (%s %s; Plex Media Server %s)' % (VERSION, Platform.OS, Platform.OSVersion, Platform.ServerVersion)
 
 ####################################################################################################
@@ -55,7 +55,7 @@ class Muvio(Agent.Artist):
   def update(self, metadata, media, lang):
 
     try:
-      json_obj = JSON.ObjectFromURL(SERACH_URL % (String.Quote(metadata.id)))
+      json_obj = JSON.ObjectFromURL(SERACH_URL % (String.Quote(metadata.id)), sleep=5.0)
     except:
       Log('*** Call to search API failed... ***')
       return None
@@ -106,7 +106,7 @@ class Muvio(Agent.Album):
   def update(self, metadata, media, lang):
 
     try:
-      json_obj = JSON.ObjectFromURL(SERACH_URL % (String.Quote(metadata.id)))
+      json_obj = JSON.ObjectFromURL(SERACH_URL % (String.Quote(metadata.id)), sleep=5.0)
     except:
       return None
 
