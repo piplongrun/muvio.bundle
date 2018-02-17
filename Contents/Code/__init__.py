@@ -1,22 +1,27 @@
+import certifi
+import requests
 import unicodedata
 
-VERSION = '2.6'
+VERSION = '3.0'
 SERACH_URL = 'https://muvio.api.tadata.me/v2/?artist=%s'
 
 TYPE_ORDER = ['music_video', 'live_music', 'lyric_video']
 TYPE_MAP = {
-  'music_video': MusicVideoObject,
-  'live_music': LiveMusicVideoObject,
-  'lyric_video': LyricMusicVideoObject
+  "music_video": MusicVideoObject,
+  "live_music": LiveMusicVideoObject,
+  "lyric_video": LyricMusicVideoObject
 }
 
 RE_LIVE_VIDEO = Regex('live (on|at|in|from|for)|\(live|unstaged\)|.*(tour|festival).*', Regex.IGNORECASE)
 
+HTTP_HEADERS = {
+  "User-Agent": "MUVIO/%s (%s %s; Plex Media Server %s)" % (VERSION, Platform.OS, Platform.OSVersion, Platform.ServerVersion)
+}
+
 ####################################################################################################
 def Start():
 
-  HTTP.CacheTime = CACHE_1WEEK
-  HTTP.Headers['User-Agent'] = 'MUVIO/%s (%s %s; Plex Media Server %s)' % (VERSION, Platform.OS, Platform.OSVersion, Platform.ServerVersion)
+  pass
 
 ####################################################################################################
 def ArtistName(artist):
@@ -54,18 +59,18 @@ class Muvio(Agent.Artist):
 
   def update(self, metadata, media, lang):
 
-    try:
-      json_obj = JSON.ObjectFromURL(SERACH_URL % (String.Quote(metadata.id)), sleep=5.0)
-    except:
-      Log('*** Call to search API failed... ***')
+    r = requests.get(SERACH_URL % (String.Quote(metadata.id)), headers=HTTP_HEADERS, verify=certifi.where())
+
+    if 'error' in r.json():
+      Log("*** An error occurred: %s ***" % (r.json()['error']))
       return None
 
-    if not 'videos' in json_obj:
+    if not 'videos' in r.json():
       return None
 
     extras = []
 
-    for video in json_obj['videos']:
+    for video in r.json()['videos']:
 
       if 'lyric video' in video['title'].lower() or 'lyric-video' in video['url'].lower():
         extra_type = 'lyric_video'
@@ -105,17 +110,18 @@ class Muvio(Agent.Album):
 
   def update(self, metadata, media, lang):
 
-    try:
-      json_obj = JSON.ObjectFromURL(SERACH_URL % (String.Quote(metadata.id)), sleep=5.0)
-    except:
+    r = requests.get(SERACH_URL % (String.Quote(metadata.id)), headers=HTTP_HEADERS, verify=certifi.where())
+
+    if 'error' in r.json():
+      Log("*** An error occurred: %s ***" % (r.json()['error']))
       return None
 
-    if not 'videos' in json_obj:
+    if not 'videos' in r.json():
       return None
 
     for index, track in enumerate(media.children):
 
-      for video in json_obj['videos']:
+      for video in r.json()['videos']:
 
         score = 100 - (10 * abs(String.LevenshteinDistance(track.title.lower(), video['title'].lower())))
         #Log("%s vs %s --> %d" % (track.title.lower(), video['title'].lower(), score))

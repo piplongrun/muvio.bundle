@@ -1,51 +1,54 @@
+import certifi
+import requests
+
 RE_VIDEOS = Regex('"quality":"(medium|high)".+?"url":"([^"]+)"')
 
 ####################################################################################################
 def MetadataObjectForURL(url):
 
-	return VideoClipObject(
-		title = 'MUVIO'
-	)
+  return VideoClipObject(
+    title = 'MUVIO'
+  )
 
 ####################################################################################################
 def MediaObjectsForURL(url):
 
-	return [
-		MediaObject(
-			parts = [
-				PartObject(key=Callback(PlayVideo, url=url, resolution=resolution))
-			],
-			container = Container.MP4,
-			video_codec = VideoCodec.H264,
-			video_resolution = resolution,
-			audio_codec = AudioCodec.AAC,
-			audio_channels = 2,
-			optimized_for_streaming = True
-		) for resolution in ['720']
-	]
+  return [
+    MediaObject(
+      parts = [
+        PartObject(key=Callback(PlayVideo, url=url, resolution=resolution))
+      ],
+      container = Container.MP4,
+      video_codec = VideoCodec.H264,
+      video_resolution = resolution,
+      audio_codec = AudioCodec.AAC,
+      audio_channels = 2,
+      optimized_for_streaming = True
+    ) for resolution in ['720']
+  ]
 
 ####################################################################################################
 def PlayVideo(url, resolution='720', **kwargs):
 
-	video_url_high = None
-	video_url_med = None
+  video_url_high = None
+  video_url_med = None
 
-	url = 'https://proxy.tadata.me/watch/%s' % (url.split('/watch/')[-1])
-	page = HTTP.Request(url, cacheTime=CACHE_1HOUR).content
-	videos = RE_VIDEOS.findall(page)
+  url = 'https://proxy.tadata.me/watch/%s' % (url.split('/watch/')[-1])
+  r = requests.get(url, headers={"User-Agent": "MUVIO URL Service"}, verify=certifi.where())
+  videos = RE_VIDEOS.findall(r.text)
 
-	for video in videos:
+  for video in videos:
 
-		if video[0] == 'medium':
-			video_url_med = video[1]
-		elif video[0] == 'high':
-			video_url_high = video[1]
+    if video[0] == 'medium':
+      video_url_med = video[1]
+    elif video[0] == 'high':
+      video_url_high = video[1]
 
-	if resolution == '720' and video_url_high:
-		video_url = video_url_high
-	elif video_url_med:
-		video_url = video_url_med
-	else:
-		raise Ex.MediaNotAvailable
+  if resolution == '720' and video_url_high:
+    video_url = video_url_high
+  elif video_url_med:
+    video_url = video_url_med
+  else:
+    raise Ex.MediaNotAvailable
 
-	return Redirect('http://%s' % (video_url.split('//')[-1]))
+  return Redirect('http://%s' % (video_url.split('//')[-1]))
