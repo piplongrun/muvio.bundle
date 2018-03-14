@@ -2,7 +2,7 @@ import certifi
 import requests
 import unicodedata
 
-VERSION = '3.0'
+VERSION = '3.1'
 SERACH_URL = 'https://muvio.api.tadata.me/v2/?artist=%s'
 
 TYPE_ORDER = ['music_video', 'live_music', 'lyric_video']
@@ -12,6 +12,7 @@ TYPE_MAP = {
   "lyric_video": LyricMusicVideoObject
 }
 
+FILTER_ARTIST = ('various artists')
 RE_LIVE_VIDEO = Regex('live (on|at|in|from|for)|\(live|unstaged\)|.*(tour|festival).*', Regex.IGNORECASE)
 
 HTTP_HEADERS = {
@@ -52,8 +53,13 @@ class Muvio(Agent.Artist):
 
   def search(self, results, media, lang, manual=False, tree=None):
 
+    artist = ArtistName(tree.title)
+
+    if artist.lower() in FILTER_ARTIST:
+      return None
+
     results.add(SearchResult(
-      id = ArtistName(tree.title),
+      id = artist,
       score = 100
     ))
 
@@ -103,8 +109,13 @@ class Muvio(Agent.Album):
 
   def search(self, results, media, lang, manual=False, tree=None):
 
+    artist = ArtistName(tree.title)
+
+    if artist.lower() in FILTER_ARTIST:
+      return None
+
     results.add(SearchResult(
-      id = ArtistName(tree.title),
+      id = artist,
       score = 100
     ))
 
