@@ -2,21 +2,13 @@ import certifi
 import requests
 import unicodedata
 
-VERSION = '3.1'
-SERACH_URL = 'https://muvio.api.tadata.me/v2/?artist=%s'
-
-TYPE_ORDER = ['music_video', 'live_music', 'lyric_video']
-TYPE_MAP = {
-  "music_video": MusicVideoObject,
-  "live_music": LiveMusicVideoObject,
-  "lyric_video": LyricMusicVideoObject
-}
-
-FILTER_ARTIST = ('various artists')
-RE_LIVE_VIDEO = Regex('live (on|at|in|from|for)|\(live|unstaged\)|.*(tour|festival).*', Regex.IGNORECASE)
+VERSION = '3.2'
+SERACH_URL = 'https://muvio.api.tadata.me/v2/?artist={}'
+RE_FILTER = Regex('Best Of|Hits Collection|Soundtrack|Various Artists', Regex.IGNORECASE)
+RE_SPLIT_TITLE = Regex(' \(?feat(?:\.|uring) ')
 
 HTTP_HEADERS = {
-  "User-Agent": "MUVIO/%s (%s %s; Plex Media Server %s)" % (VERSION, Platform.OS, Platform.OSVersion, Platform.ServerVersion)
+  "User-Agent": "MUVIO/{} ({} {}; Plex Media Server {})".format(VERSION, Platform.OS, Platform.OSVersion, Platform.ServerVersion)
 }
 
 ####################################################################################################
@@ -55,7 +47,7 @@ class Muvio(Agent.Artist):
 
     artist = ArtistName(tree.title)
 
-    if artist.lower() in FILTER_ARTIST:
+    if RE_FILTER.search(artist):
       return None
 
     results.add(SearchResult(
@@ -65,39 +57,24 @@ class Muvio(Agent.Artist):
 
   def update(self, metadata, media, lang):
 
-    r = requests.get(SERACH_URL % (String.Quote(metadata.id)), headers=HTTP_HEADERS, verify=certifi.where())
+    r = requests.get(SERACH_URL.format(String.Quote(metadata.id)), headers=HTTP_HEADERS, verify=certifi.where())
 
     if 'error' in r.json():
-      Log("*** An error occurred: %s ***" % (r.json()['error']))
+      Log("*** An error occurred: {} ***".format(r.json()['error']))
       return None
 
     if not 'videos' in r.json():
       return None
 
-    extras = []
-
     for video in r.json()['videos']:
 
-      if 'lyric video' in video['title'].lower() or 'lyric-video' in video['url'].lower():
-        extra_type = 'lyric_video'
-      elif RE_LIVE_VIDEO.search(video['title']):
-        extra_type = 'live_music'
-      else:
-        extra_type = 'music_video'
-
-      extras.append({
-        'type': extra_type,
-        'extra': TYPE_MAP[extra_type](
-          url = 'muvio://%s' % (video['url'].split('//')[-1]),
+      metadata.extras.add(
+        MusicVideoObject(
+          url = 'muvio://{}'.format(video['url'].split('//')[-1]),
           title = video['title'],
           thumb = video['thumb_url']
         )
-      })
-
-    extras.sort(key=lambda e: TYPE_ORDER.index(e['type']))
-
-    for extra in extras:
-      metadata.extras.add(extra['extra'])
+      )
 
 ####################################################################################################
 class Muvio(Agent.Album):
@@ -111,7 +88,7 @@ class Muvio(Agent.Album):
 
     artist = ArtistName(tree.title)
 
-    if artist.lower() in FILTER_ARTIST:
+    if RE_FILTER.search(artist):
       return None
 
     results.add(SearchResult(
@@ -121,10 +98,10 @@ class Muvio(Agent.Album):
 
   def update(self, metadata, media, lang):
 
-    r = requests.get(SERACH_URL % (String.Quote(metadata.id)), headers=HTTP_HEADERS, verify=certifi.where())
+    r = requests.get(SERACH_URL.format(String.Quote(metadata.id)), headers=HTTP_HEADERS, verify=certifi.where())
 
     if 'error' in r.json():
-      Log("*** An error occurred: %s ***" % (r.json()['error']))
+      Log("*** An error occurred: {} ***".format(r.json()['error']))
       return None
 
     if not 'videos' in r.json():
@@ -134,18 +111,21 @@ class Muvio(Agent.Album):
 
       for video in r.json()['videos']:
 
-        score = 100 - (10 * abs(String.LevenshteinDistance(track.title.lower(), video['title'].lower())))
-        #Log("%s vs %s --> %d" % (track.title.lower(), video['title'].lower(), score))
+        track_title = RE_SPLIT_TITLE.split(track.title.lower())[0]
+        video_title = RE_SPLIT_TITLE.split(video['title'].lower())[0]
+        score = 100 - (10 * abs(String.LevenshteinDistance(track_title, video_title)))
+        #Log('"{}" vs "{}" --> {}'.format(track_title, video_title, score))
 
         if score > 80:
 
-          music_video = MusicVideoObject(
-            url = 'muvio://%s' % (video['url'].split('//')[-1]),
-            title = video['title'],
-            thumb = video['thumb_url']
+          # Add the video, and we're done (only one video per track allowed)
+          #Log('Adding music video "{}" to track {} - "{}"'.format(video['title'], index, track.title))
+          metadata.tracks[track.guid].extras.add(
+            MusicVideoObject(
+              url = 'muvio://{}'.format(video['url'].split('//')[-1]),
+              title = video['title'],
+              thumb = video['thumb_url']
+            )
           )
 
-          # Add the video, and we're done (only one video per track allowed)
-          #Log('Adding music video %s to track %s - %s' % (music_video.title, index, track.title))
-          metadata.tracks[track.guid].extras.add(music_video)
           break
