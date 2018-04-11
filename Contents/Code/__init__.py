@@ -4,7 +4,7 @@ import unicodedata
 
 VERSION = '3.2'
 SERACH_URL = 'https://muvio.api.tadata.me/v2/?artist={}'
-RE_FILTER = Regex('Best Of|Hits Collection|Soundtrack|Various Artists', Regex.IGNORECASE)
+RE_FILTER = Regex('Best Of|Hits Collection|Sound ?track|Unknown Artist|Various Artists', Regex.IGNORECASE)
 RE_SPLIT_TITLE = Regex(' \(?feat(?:\.|uring) ')
 
 HTTP_HEADERS = {
