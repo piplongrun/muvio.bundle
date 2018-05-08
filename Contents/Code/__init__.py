@@ -2,7 +2,7 @@ import certifi
 import requests
 import unicodedata
 
-VERSION = '3.2'
+VERSION = '3.3'
 SERACH_URL = 'https://muvio.api.tadata.me/v2/?artist={}'
 RE_FILTER = Regex('Best Of|Hits Collection|Sound ?track|Unknown Artist|Various Artists', Regex.IGNORECASE)
 RE_SPLIT_TITLE = Regex(' \(?feat(?:\.|uring) ')
