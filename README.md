@@ -1,3 +1,5 @@
+**This agent is no longer maintained now that Vevo has shut down its APIs**
+
 MUVIO
 =====
 <img src="https://img.shields.io/github/release/piplongrun/muvio.bundle.png?style=flat-square">
